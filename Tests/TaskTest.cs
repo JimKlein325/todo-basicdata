@@ -27,8 +27,8 @@ namespace ToDoList
     public void Test_EqualOverrideTrueForSameDescription()
     {
       //Arrange, Act
-      Task firstTask = new Task("Mow the lawn", 1);
-      Task secondTask = new Task("Mow the lawn", 1);
+      Task firstTask = new Task("Mow the lawn", Task.DefaultDate);
+      Task secondTask = new Task("Mow the lawn",  firstTask.GetDueDate(), firstTask.GetId());
 
       //Assert
       Assert.Equal(firstTask, secondTask);
@@ -38,7 +38,7 @@ namespace ToDoList
     public void Test_Save()
     {
       //Arrange
-      Task testTask = new Task("Mow the lawn", 1);
+      Task testTask = new Task("Mow the lawn", Task.DefaultDate);
       testTask.Save();
 
       //Act
@@ -53,7 +53,7 @@ namespace ToDoList
     public void Test_SaveAssignsIdToObject()
     {
       //Arrange
-      Task testTask = new Task("Mow the lawn", 1);
+      Task testTask = new Task("Mow the lawn", Task.DefaultDate);
       testTask.Save();
 
       //Act
@@ -70,7 +70,7 @@ namespace ToDoList
     public void Test_FindFindsTaskInDatabase()
     {
       //Arrange
-      Task testTask = new Task("Mow the lawn");
+      Task testTask = new Task("Mow the lawn", Task.DefaultDate);
       testTask.Save();
 
       //Act
@@ -84,7 +84,7 @@ namespace ToDoList
     public void Test_AddCategory_AddsCategoryToTask()
     {
       //Arrange
-      Task testTask = new Task("Mow the lawn");
+      Task testTask = new Task("Mow the lawn", Task.DefaultDate);
       testTask.Save();
 
       Category testCategory = new Category("Home stuff");
@@ -104,7 +104,7 @@ namespace ToDoList
     public void Test_GetCategories_ReturnsAllTaskCategories()
     {
       //Arrange
-      Task testTask = new Task("Mow the lawn");
+      Task testTask = new Task("Mow the lawn", Task.DefaultDate);
       testTask.Save();
 
       Category testCategory1 = new Category("Home stuff");
@@ -130,7 +130,7 @@ namespace ToDoList
       testCategory.Save();
 
       string testDescription = "Mow the lawn";
-      Task testTask = new Task(testDescription);
+      Task testTask = new Task(testDescription, Task.DefaultDate);
       testTask.Save();
 
       //Act
@@ -142,6 +142,35 @@ namespace ToDoList
 
       //Assert
       Assert.Equal(testCategoryTasks, resultCategoryTasks);
+    }
+
+    [Fact]
+    public void Test_Equals_DateTimeComparing()
+    {
+      //Arrange
+      DateTime otherDate = new DateTime(2000, 1, 1);
+      Task testTask = new Task("Mow the lawn", Task.DefaultDate);
+
+      // Act
+      DateTime testTaskDueDate = testTask.GetDueDate();
+
+      //Assert
+      Assert.NotEqual(otherDate, testTaskDueDate);
+    }
+
+    [Fact]
+    public void Test_SetDueDate_DateTimeComparing()
+    {
+      //Arrange
+      DateTime otherDate = new DateTime(2000, 1, 1);
+      Task testTask = new Task("Mow the lawn", Task.DefaultDate);
+
+      // Act
+      testTask.SetDueDate(otherDate);
+      DateTime testTaskDueDate = testTask.GetDueDate();
+
+      //Assert
+      Assert.Equal(otherDate, testTaskDueDate);
     }
 
 
